@@ -39,9 +39,10 @@ _, indeksyPosortowane2 = zip(*posortowaneM2)
 M = [M1 , M2]
 
 posortowaneIndeksy = indeksyPosortowane1 + indeksyPosortowane2
-liczbaMaszyn = wykresyGantta.gantt(M,posortowaneIndeksy)
+Cmax, Fsrd = wykresyGantta.gantt(M,posortowaneIndeksy)
 
-
+print(Cmax)
+print(Fsrd)
 
 
 
