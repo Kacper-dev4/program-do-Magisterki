@@ -25,7 +25,7 @@ def Johnson(M,roznaKolejnosc):
                 indeksyM2.append(i)
 
         posortowaneM1 = sorted(zip(mniejszeM1,indeksyM1),key=lambda x: (x[0], x[1]))
-        posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], x[1]),reverse=True)
+        posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], -x[1]),reverse=True)
 
         _, indeksyPosortowane1 = zip(*posortowaneM1)
         _, indeksyPosortowane2 = zip(*posortowaneM2)
@@ -54,8 +54,10 @@ def Johnson(M,roznaKolejnosc):
                 mniejszeM2.append(M2[i])
                 indeksyM2.append(i)
 
+
+        
         posortowaneM1 = sorted(zip(mniejszeM1,indeksyM1),key=lambda x: (x[0], x[1]))
-        posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], x[1]),reverse=True)
+        posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], -x[1]),reverse=True)
 
         _, indeksyPosortowane1 = zip(*posortowaneM1)
         _, indeksyPosortowane2 = zip(*posortowaneM2)
@@ -83,8 +85,11 @@ def Johnson(M,roznaKolejnosc):
                         mniejszeM2.append(M[2*j+1][i])
                         indeksyM2.append(i)
 
+                
                 posortowaneM1 = sorted(zip(mniejszeM1,indeksyM1),key=lambda x: (x[0], x[1]))
-                posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], x[1]),reverse=True)
+                posortowaneM2 = sorted(zip(mniejszeM2,indeksyM2),key=lambda x: (x[0], -x[1]),reverse=True)
+
+                print(posortowaneM2)
 
                 _, indeksyPosortowane1 = zip(*posortowaneM1)
                 _, indeksyPosortowane2 = zip(*posortowaneM2)

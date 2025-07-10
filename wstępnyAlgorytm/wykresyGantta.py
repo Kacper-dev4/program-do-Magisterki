@@ -4,7 +4,7 @@ import matplotlib.cm as cm
 import numpy as np
 
 
-def rysujGantta(maszyny,kolejnosc):
+def rysujGantta(maszyny,kolejnosc,Cmax,Fsrd):
     
 
     liczba_maszyn = len(maszyny)
@@ -22,7 +22,7 @@ def rysujGantta(maszyny,kolejnosc):
     ax.set_yticks(range(liczba_maszyn))
     ax.set_yticklabels([f'Maszyna {i+1}' for i in reversed(range(liczba_maszyn))])
     ax.set_xlabel('Czas')
-    ax.set_title('Wykres Gantta')
+    ax.set_title(f'Wykres Gantta Cmax = {Cmax}, Fsrd = {Fsrd:.2f}')
 
     # Znalezienie maksymalnego czasu
     max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
@@ -33,7 +33,7 @@ def rysujGantta(maszyny,kolejnosc):
     plt.show()
 
 
-def rysujGantta2(maszyny,kolejnosc):
+def rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd):
     
     k = 0
     pomoc = 0
@@ -45,7 +45,8 @@ def rysujGantta2(maszyny,kolejnosc):
 
     for i, maszyna in enumerate(maszyny):
         for j, (start, duration) in enumerate(maszyna):
-            ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(j))
+            nrZadania = kolejnosc[k][j]
+            ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(nrZadania))
             ax.text(start + duration / 2, liczba_maszyn - 1 - i, f'Zad {kolejnosc[k][j]+1}', 
                     va='center', ha='center', color='white', fontsize=8)
         pomoc = pomoc + 1
@@ -55,7 +56,7 @@ def rysujGantta2(maszyny,kolejnosc):
     ax.set_yticks(range(liczba_maszyn))
     ax.set_yticklabels([f'Maszyna {i+1}' for i in reversed(range(liczba_maszyn))])
     ax.set_xlabel('Czas')
-    ax.set_title('Wykres Gantta')
+    ax.set_title(f'Wykres Gantta Cmax = {Cmax}, Fsrd = {Fsrd:.2f}')
 
     # Znalezienie maksymalnego czasu
     max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
@@ -108,9 +109,10 @@ def gantt(Mt,kolejnosc):
         maszyny.append(maszyna)
     print(maszyny)
 
-    rysujGantta(maszyny,kolejnosc)
+    
     Cmax = poczatek
     Fsrd = sum(F)/len(F)
+    rysujGantta(maszyny,kolejnosc,Cmax,Fsrd)
     return Cmax, Fsrd
 
 def gantt2(Mt,kolejnosc):
@@ -122,6 +124,7 @@ def gantt2(Mt,kolejnosc):
     koniecNowy = []
     F = []
     liczbaMaszyn = sum(1 for element in Mt if isinstance(element, list))
+    liczbaKolejnosci = sum(1 for element in kolejnosc if isinstance(element, list))
     liczbaZadan = len(Mt[0])
     
     for i in range(liczbaMaszyn):
@@ -153,16 +156,28 @@ def gantt2(Mt,kolejnosc):
             if Mt[i][kolejnosc[k][j]] > 0: 
                 F[j] = poczatek
         pomoc = pomoc + 1
-        if pomoc == 2:
+        if pomoc == 2 and k <= liczbaKolejnosci:
             pomoc = 0
             k = k + 1
-        koniec = koniecNowy
-        koniecNowy = []        
-        maszyny.append(maszyna)
-    print(maszyny)
+            koniecPomoc = koniecNowy
 
-    rysujGantta2(maszyny,kolejnosc)
+            poprzednia = kolejnosc[k-1]
+            aktualna = kolejnosc[k]
+
+            for i, zadanie in enumerate(aktualna):
+                # znajdź indeks tego zadania w poprzedniej kolejności
+                indeks_w_poprzedniej = poprzednia.index(zadanie)
+                # przypisz odpowiadający czas
+                koniecNowy[i] = koniecPomoc[indeks_w_poprzedniej]
+
+        koniec = koniecNowy
+        koniecNowy = [] 
+        maszyny.append(maszyna)
+    #print(maszyny)
+
+    
     Cmax = poczatek
     Fsrd = sum(F)/len(F)
-    
+    rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd)
+
     return Cmax, Fsrd
