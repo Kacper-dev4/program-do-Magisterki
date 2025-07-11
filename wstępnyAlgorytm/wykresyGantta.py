@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-
+import math
 
 def rysujGantta(maszyny,kolejnosc,Cmax,Fsrd):
     
@@ -37,7 +37,11 @@ def rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd):
     
     k = 0
     pomoc = 0
+    
     liczba_maszyn = len(maszyny)
+    nieparzysty = liczba_maszyn % 2
+    if nieparzysty == 1:
+        kolejnosc.append(kolejnosc[-1])
     liczba_zadan = len(maszyny[0])
     colors = cm.get_cmap('tab20', liczba_zadan)
 
@@ -116,6 +120,7 @@ def gantt(Mt,kolejnosc):
     return Cmax, Fsrd
 
 def gantt2(Mt,kolejnosc):
+    
     k = 0
     pomoc = 0
     poczatek = 0
@@ -124,7 +129,8 @@ def gantt2(Mt,kolejnosc):
     koniecNowy = []
     F = []
     liczbaMaszyn = sum(1 for element in Mt if isinstance(element, list))
-    liczbaKolejnosci = sum(1 for element in kolejnosc if isinstance(element, list))
+    liczbaKolejnosci = math.floor(liczbaMaszyn/2)
+    print(liczbaKolejnosci)
     liczbaZadan = len(Mt[0])
     
     for i in range(liczbaMaszyn):
@@ -156,14 +162,13 @@ def gantt2(Mt,kolejnosc):
             if Mt[i][kolejnosc[k][j]] > 0: 
                 F[j] = poczatek
         pomoc = pomoc + 1
-        if pomoc == 2 and k <= liczbaKolejnosci:
+        if pomoc == 2 and k < liczbaKolejnosci-1:
             pomoc = 0
             k = k + 1
-            koniecPomoc = koniecNowy
+            koniecPomoc = koniecNowy.copy()
 
             poprzednia = kolejnosc[k-1]
             aktualna = kolejnosc[k]
-
             for i, zadanie in enumerate(aktualna):
                 # znajdź indeks tego zadania w poprzedniej kolejności
                 indeks_w_poprzedniej = poprzednia.index(zadanie)
@@ -173,7 +178,7 @@ def gantt2(Mt,kolejnosc):
         koniec = koniecNowy
         koniecNowy = [] 
         maszyny.append(maszyna)
-    #print(maszyny)
+    print(maszyny)
 
     
     Cmax = poczatek
