@@ -49,7 +49,7 @@ def Johnson(M,roznaKolejnosc):
 
 
 # Uproszczenie do problemu dwóch maszyn
-    if (liczbaMaszyn > 2 and not roznaKolejnosc):
+    elif (liczbaMaszyn > 2 and not roznaKolejnosc):
         k = math.ceil(liczbaMaszyn/2)
         M1 = np.sum(M[0:k], axis = 0)
         M2 = np.sum(M[k:],axis = 0) 
@@ -57,8 +57,10 @@ def Johnson(M,roznaKolejnosc):
         return kolejnosci 
 
 
-# Różna kolejność na parach maszyn 
-    if liczbaMaszyn > 3 and roznaKolejnosc:
+# Różna kolejność na parach maszyn
+
+# Parzysta liczba maszyn 
+    elif liczbaMaszyn > 3 and roznaKolejnosc:
         k = math.floor(liczbaMaszyn/2)
         
         if liczbaMaszyn % 2 == 0:
@@ -66,7 +68,7 @@ def Johnson(M,roznaKolejnosc):
                 kolejnosc = posortowanie(M[2*j],M[2*j+1])
                 kolejnosci.append(kolejnosc)
                
-
+# Nieparzysta liczba maszyn
         else:
             for j in range(k):
                 if j != k-1:
