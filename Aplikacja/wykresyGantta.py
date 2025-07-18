@@ -6,7 +6,7 @@ import math
 
 def rysujGantta(maszyny,kolejnosc,Cmax,Fsrd):
     
-
+    textColor = 'black'
     liczba_maszyn = len(maszyny)
     liczba_zadan = len(maszyny[0])
     colors = cm.get_cmap('tab20', liczba_zadan)
@@ -15,9 +15,10 @@ def rysujGantta(maszyny,kolejnosc,Cmax,Fsrd):
 
     for i, maszyna in enumerate(maszyny):
         for j, (start, duration) in enumerate(maszyna):
-            ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(j))
-            ax.text(start + duration / 2, liczba_maszyn - 1 - i, f'Zad {kolejnosc[j]+1}', 
-                    va='center', ha='center', color='white', fontsize=8)
+            if duration > 0:
+                ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(j))
+                ax.text(start + duration / 2, liczba_maszyn - 1 - i, f'Zad {kolejnosc[j]+1}', 
+                    va='center', ha='center', color=textColor, fontsize=8)
 
     ax.set_yticks(range(liczba_maszyn))
     ax.set_yticklabels([f'Maszyna {i+1}' for i in reversed(range(liczba_maszyn))])
@@ -25,9 +26,10 @@ def rysujGantta(maszyny,kolejnosc,Cmax,Fsrd):
     ax.set_title(f'Wykres Gantta Cmax = {Cmax}, Fsrd = {Fsrd:.2f}')
 
     # Znalezienie maksymalnego czasu
-    max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
-    ax.set_xticks(range(0, int(max_time) + 1, 1))
-    ax.grid(True, axis='x', linestyle='--', alpha=0.5)
+    if Cmax < 100:
+        max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
+        ax.set_xticks(range(0, int(max_time) + 1, 1))
+        ax.grid(True, axis='x', linestyle='--', alpha=0.5)
 
     plt.tight_layout()
     plt.show()
@@ -37,7 +39,7 @@ def rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd):
     
     k = 0
     pomoc = 0
-    
+    textColor = 'black'
     liczba_maszyn = len(maszyny)
     nieparzysty = liczba_maszyn % 2
     if nieparzysty == 1:
@@ -50,9 +52,10 @@ def rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd):
     for i, maszyna in enumerate(maszyny):
         for j, (start, duration) in enumerate(maszyna):
             nrZadania = kolejnosc[k][j]
-            ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(nrZadania))
-            ax.text(start + duration / 2, liczba_maszyn - 1 - i, f'Zad {kolejnosc[k][j]+1}', 
-                    va='center', ha='center', color='white', fontsize=8)
+            if duration > 0:
+                ax.barh(liczba_maszyn - 1 - i, duration, left=start, height=0.5, color=colors(nrZadania))
+                ax.text(start + duration / 2, liczba_maszyn - 1 - i, f'Zad {kolejnosc[k][j]+1}', 
+                    va='center', ha='center', color=textColor, fontsize=8)
         pomoc = pomoc + 1
         if pomoc == 2:
             pomoc = 0
@@ -62,10 +65,11 @@ def rysujGantta2(maszyny,kolejnosc,Cmax,Fsrd):
     ax.set_xlabel('Czas')
     ax.set_title(f'Wykres Gantta Cmax = {Cmax}, Fsrd = {Fsrd:.2f}')
 
-    # Znalezienie maksymalnego czasu
-    max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
-    ax.set_xticks(range(0, int(max_time) + 1, 1))
-    ax.grid(True, axis='x', linestyle='--', alpha=0.5)
+   #  Znalezienie maksymalnego czasu
+    if Cmax < 100:
+        max_time = max(start + duration for maszyna in maszyny for (start, duration) in maszyna)
+        ax.set_xticks(range(0, int(max_time) + 1, 1))
+        ax.grid(True, axis='x', linestyle='--', alpha=0.5)
 
     plt.tight_layout()
     plt.show()
